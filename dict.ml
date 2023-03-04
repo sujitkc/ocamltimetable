@@ -17,22 +17,21 @@ let rec add k v d =
     else
       (k', l) :: (add k v t)
 
+let rec get k d =
+  match d with
+    [] -> None
+  | (k', vs) :: t -> if k = k' then Some(vs) else (get k t)
+
 (* Add a list vs of values for a given key k to a dict d. *)
 let add_values k vs d =
-  let rec loop k vs d =
-    match vs with
-      [] -> d
-    | v :: vs' -> loop k vs' (add k v d)
-  in
-  loop k vs d
+  List.fold_left (fun d' v -> add k v d') d vs
 
 (* utility function to allow creating a dict out of a list representation. *)
-let rec of_list l =
-  match l with
-    [] -> make ()
-  | (k, vs) :: t -> let d = of_list t in add_values k vs d
+let of_list l =
+  List.fold_left (fun d' (k, vs) -> add_values k vs d') (make ()) l
 
 let string_of_key = string_of_int
+let string_of_value = string_of_int
 let string_of_values values =
   let los = List.map string_of_value values in
   let s = List.fold_left (fun x y -> x ^ ";" ^ y) "" los in
@@ -50,15 +49,25 @@ let add_value_as_key k v d = add v k d
 
 (* Add all values in vs as keys with k as value *)
 let rec add_values_as_keys k vs d =
-    match vs with
-      [] -> d
-    | v' :: vs' -> add_value_as_key k v' (add_values_as_keys k vs' d)
+   List.fold_left (fun d' v -> add_value_as_key k v d') d vs 
 
 (* invert the dict d *)
 let rec invert d =
-  match d with
-    [] -> make ()
-  | (k, vs) :: t -> add_values_as_keys k vs (invert t) 
+  let ks = keyset d in
+  let rec loop ks d' =
+    match ks with
+      [] -> d'
+    | k :: ks' ->
+        let vsoption = get k d in
+        begin
+          match vsoption with
+            None -> failwith "invert: Something went wrong!"
+          | Some(vs) ->
+              let d'' = add_values_as_keys k vs d' in
+              loop ks' d''
+        end
+  in
+  loop ks (make ())
 
 let t1 () =
   let d1 = make () in
@@ -79,3 +88,24 @@ let t4 () =
   let d1 = add_values_as_keys 1 [2; 3] (make ()) in
   let d2 = add_values_as_keys 4 [2; 5] d1 in
   print_endline (string_of_dict d2)
+
+let test_key k d =
+  let vs = get k d in
+  match vs with
+    None -> print_endline "key not found."
+  | Some(vs') -> print_endline ("d[" ^ (string_of_key k) ^ "] = " ^ (string_of_values vs'))
+
+let t5 () =
+  let d = of_list [(1, [2; 3]); (4, [5; 6; 7]); (8, [9])]
+  and k = 1 in
+  test_key k d
+
+let t6 () =
+  let d = of_list [(1, [2; 3]); (4, [5; 6; 7]); (8, [9])]
+  and k = 5 in
+  test_key k d
+
+let t7 () =
+  let d = of_list [(1, [2; 3]); (4, [5; 6; 7]); (8, [9])] in
+  let d1 = add_values 1 [10; 11] d in
+  print_endline (string_of_dict d1)

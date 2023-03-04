@@ -7,6 +7,9 @@ val keyset :('a * 'b) list -> 'a list
 (* Add a key value pair (k, v) to the given dict d. *)
 val add : 'a -> 'b -> ('a * 'b list) list -> ('a * 'b list) list
 
+(* Get the values corresponding to the key k in the given dict d *)
+val get : 'a -> ('a * 'b) list -> 'b option
+
 (* Add a list vs of values for a given key k to a dict d. *)
 val add_values : 'a -> 'b list -> ('a * 'b list) list -> ('a * 'b list) list
 
