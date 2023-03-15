@@ -67,6 +67,9 @@ struct
     if are_neighbours n1 n2 g then g
     else D.add n1 n2 g
 
+  let add_edges n g ns =
+    List.fold_left (fun g' n' -> add_edge n n' g') g ns
+
   (*
     Remove a node as key and remove it as value from
     all mappings where it's a value. 
@@ -79,7 +82,7 @@ end (* Module Graph *)
 
 (* make_graph *)
 let tgraph_1 () =
-  let g = Graph.make_graph ()
+  let _ = Graph.make_graph ()
   in
   ()
 
