@@ -1,5 +1,5 @@
 (* create a new empty dict *)
-val make : unit -> 'a list
+val make_dict : unit -> 'a list
 
 (* get the list of keys in dict d *)
 val keyset :('a * 'b) list -> 'a list
