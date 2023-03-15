@@ -1,5 +1,3 @@
-#use "graph.ml"
-
 (* PSEUDO-CODE
  *
   while g is not empty do
@@ -161,9 +159,3 @@ let graph_colour g =
    in
    iter 1 g
 
-(* TEST CASES *)
-
-let t_gc_1 () =
-  let g = G.of_list [(1, [3; 6]); (2, [3; 5; 6]); (3, [4; 5; 6]); (4, [5; 6]); (5, [6])] in
-  let cmap = graph_colour g in
-  print_endline (A.to_string cmap)
