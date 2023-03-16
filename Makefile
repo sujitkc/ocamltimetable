@@ -1,38 +1,55 @@
+COMPILE=ocamlc -g
+
 dict.cmi : dict.mli
-	ocamlc -c dict.mli
+	${COMPILE} -c dict.mli
 
 dict.cmo : dict.ml dict.cmi
-	ocamlc -c dict.ml
+	${COMPILE} -c dict.ml
 
 test_dict.cmo : test_dict.ml dict.cmo
-	ocamlc -c test_dict.ml
+	${COMPILE} -c test_dict.ml
 
 test_dict : test_dict.cmo
-	ocamlc -o test_dict dict.cmo test_dict.cmo
+	${COMPILE} -o test_dict dict.cmo test_dict.cmo
 
 graph.cmi : graph.mli
-	ocamlc -c graph.mli
+	${COMPILE} -c graph.mli
 
 graph.cmo : graph.ml graph.cmi dict.cmi
-	ocamlc -c graph.ml
+	${COMPILE} -c graph.ml
 
 test_graph.cmo : test_graph.ml dict.cmi
-	ocamlc -c test_graph.ml
+	${COMPILE} -c test_graph.ml
 
 test_graph : test_graph.cmo graph.cmo dict.cmo
-	ocamlc -o test_graph dict.cmo graph.cmo test_graph.cmo
+	${COMPILE} -o test_graph dict.cmo graph.cmo test_graph.cmo
 
 gc.cmi : gc.mli
-	ocamlc -c gc.mli
+	${COMPILE} -c gc.mli
 
 gc.cmo : gc.ml gc.cmi graph.cmi dict.cmi
-	ocamlc -c gc.ml
+	${COMPILE} -c gc.ml
 
 test_gc.cmo : test_gc.ml graph.cmi dict.cmi gc.cmi
-	ocamlc -c test_gc.ml
+	${COMPILE} -c test_gc.ml
 
 test_gc : dict.cmo graph.cmo gc.cmo test_gc.cmo
-	ocamlc -o test_gc dict.cmo graph.cmo gc.cmo test_gc.cmo
+	${COMPILE} -o test_gc dict.cmo graph.cmo gc.cmo test_gc.cmo
+
+ig.cmi : ig.mli graph.cmi dict.cmi
+	${COMPILE} -c ig.mli
+
+ig.cmo : ig.ml ig.cmi
+	${COMPILE} -c ig.ml
+
+test_ig.cmo : test_ig.ml ig.cmi
+	${COMPILE} -c test_ig.ml
+
+test_ig : test_ig.cmo ig.cmo graph.cmo dict.cmo
+	ocamlc -g -o test_ig dict.cmo graph.cmo ig.cmo test_ig.cmo
 
 clean:
 	rm *.cmo *.cmi test_dict
+
+lc:
+	wc -l *.ml *.mli Makefile
