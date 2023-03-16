@@ -48,6 +48,18 @@ test_ig.cmo : test_ig.ml ig.cmi
 test_ig : test_ig.cmo ig.cmo graph.cmo dict.cmo
 	ocamlc -g -o test_ig dict.cmo graph.cmo ig.cmo test_ig.cmo
 
+timetable.cmi : timetable.mli
+	${COMPILE} -c timetable.mli
+
+timetable.cmo : timetable.ml timetable.cmi dict.cmi graph.cmi gc.cmi ig.cmi
+	${COMPILE} -c timetable.ml
+
+test_timetable.cmo : test_timetable.ml timetable.cmi dict.cmi graph.cmi gc.cmi ig.cmi
+	${COMPILE} -c test_timetable.ml
+
+test_timetable : test_timetable.cmo timetable.cmo dict.cmo graph.cmo gc.cmo ig.cmo
+	${COMPILE} -o test_timetable dict.cmo graph.cmo gc.cmo ig.cmo timetable.cmo test_timetable.cmo
+
 clean:
 	rm *.cmo *.cmi test_dict
 
