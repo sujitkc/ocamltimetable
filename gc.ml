@@ -49,19 +49,30 @@ struct
     "[" ^ str ^ "]"
 end
 
+(* find the maximum element in the list *)
+let max l =
+  let rec iter max = function
+      [] -> max
+    | h :: t -> if max > h then iter max t else iter h t
+  in
+  match l with
+    [] -> raise Not_found
+  | _ -> iter (List.hd l) l
+
 module D = Dict
 module G = Graph
 module S = Stack
 module A = AssociativeArray
 
+(* remove one node n from g that satisfies the following:
+ * among all nodes in g that have < k neighbours, n has the fewest.
+ * If such a node is not found, fail miserably. *)
 let remove_next k g =
   let nodes = G.all_nodes g in
   let sorted = List.sort 
     (fun n1 n2 ->
-       let nbrs1 = G.all_neighbours n1 g
-       and nbrs2 = G.all_neighbours n2 g in
-       let num1 = List.length nbrs1
-       and num2 = List.length nbrs2 in
+       let num1 = G.num_of_neighbours n1
+       and num2 = G.num_of_neighbours n2 in
        Int.compare num1 num2
      ) nodes in
   let next_node = List.nth sorted 0 in
@@ -71,6 +82,8 @@ let remove_next k g =
     (next_node, nbrs, g')
   else raise (GCException k)
 
+(* remove all nodes from graph g one by one and push them into
+ * the stack as you go. *)
 let remove_all k g =
   let rec loop g nbrs_dict stack =
     if G.num_of_nodes g = 0 then
@@ -82,16 +95,6 @@ let remove_all k g =
   in
   let nbrs_dict0 = D.make_dict () in
   loop g nbrs_dict0 (S.make ())
-
-(* find the maximum element in the list *)
-let max l =
-  let rec iter max = function
-      [] -> max
-    | h :: t -> if max > h then iter max t else iter h t
-  in
-  match l with
-    [] -> raise Not_found
-  | _ -> iter (List.hd l) l
 
 (* 
  * compute a minimum colour which is an integer c such

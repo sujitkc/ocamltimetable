@@ -35,8 +35,6 @@ let of_list l =
   in
   iter g nks
 
-let num_of_nodes g = List.length (D.keyset g)
-
 let has_node n g = List.mem n (D.keyset g)
 
 let string_of_node = D.string_of_key
@@ -54,6 +52,8 @@ let all_neighbours n g =
     | Some(vs') -> vs'
   in
   vs @ (D.keys_of_value n g)
+
+let num_of_neighbours n g = List.length (all_neighbours n g)
 
 (* returns true if n1 and n2 are neighbours in graph g; else false. *)
 let are_neighbours n1 n2 g = List.mem n2 (all_neighbours n1 g)
