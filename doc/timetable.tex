@@ -1,0 +1,256 @@
+\documentclass[12pts]{article}
+\usepackage{xcolor, colortbl}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{alltt}
+\usepackage{tikz}
+\usepackage{framed}
+\usepackage{mdframed}
+\usepackage{marvosym}
+\usepackage{amssymb}
+\usepackage{wasysym}
+\usepackage{marvosym}
+\usepackage{crayola}
+\usepackage{mathpartir}
+\usepackage{tabularx}
+\usepackage[belowskip=-15pt,aboveskip=0pt]{caption}
+\usepackage[skins]{tcolorbox}
+\usepackage{multicol}
+\usetikzlibrary{positioning,shapes,arrows, backgrounds, fit, shadows}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{decorations.markings}
+\usepackage[margin=1in]{geometry}
+
+
+\newcommand{\myheader}[1]{
+	{\color{darkblue}
+		\begin{Large}
+			\begin{center}
+				{#1}
+			\end{center}
+		\end{Large}
+	}
+}
+\newcommand{\myminorheader}[1]{
+	{\color{BrickRed}
+		\begin{Large}
+			{\fontfamily{\sfdefault}\selectfont\textbf{#1}}
+		\end{Large}
+	}
+}
+
+\newcommand{\myprod}[0]{\hspace{0.5cm}$\rightarrow$\hspace{0.5cm}}
+\newcommand{\mychoice}[0]{\hspace{0.75cm}$|$\hspace{0.25cm}}
+\newcommand{\myderiv}[0]{\hspace{0.5cm}$\Rightarrow$\hspace{0.5cm}}
+
+\newcommand{\kcquestion}[1]{
+\begin{framed}
+{\noindent\color{BrickRed}Q:} #1
+\end{framed}
+}
+
+\newcommand{\kcbox}[2]{
+	\vspace{1cm}
+	\begin{minipage}{\textwidth}
+		\begin{mdframed}[backgroundcolor=Magenta!20] 
+			\begin{center}
+				\underline{\textsc{\color{Brown}#1}}
+			\end{center}
+		
+			{#2}
+
+	    \end{mdframed}
+	\end{minipage}
+}
+
+\newcommand{\pendingtopic}[1]{
+\textbf{\color{Red}#1}
+}
+\tikzstyle{bb}=[%
+      rectangle, draw=black, thick, fill=OliveGreen!30, drop shadow, align=center,
+      text ragged, minimum height=2em, minimum width=2em, inner sep=6pt
+]
+
+
+\tikzstyle{inv}=[%
+      rectangle, draw=none,  align=center,
+      text ragged, minimum height=2em, minimum width=2em, inner sep=6pt
+]
+
+\tikzstyle{db}=[%
+      ellipse, draw=black, thick, fill=pink, drop shadow, align=center,
+      text ragged, minimum height=2em, inner sep=6pt
+]
+
+\tikzstyle{jn}=[%
+      ellipse, draw=black, thick, fill=black
+]
+
+\tikzstyle{io}=[%
+      trapezium, trapezium left angle=60, trapezium right angle=120, draw=black, thick, fill=brown, drop shadow,
+      text ragged, minimum height=2em, minimum width=2em, inner sep=6pt, align=center
+]
+
+\tikzstyle{glio}=[%
+      trapezium, trapezium left angle=60, trapezium right angle=120, draw=red, line width = 1mm, fill=brown, drop shadow,
+      text ragged, minimum height=2em, minimum width=2em, inner sep=6pt
+]
+\tikzstyle{gl}=[%
+      rectangle, draw=red, line width = 1mm, fill=lightblue, drop shadow,
+      text ragged, minimum height=2em, minimum width=2em, inner sep=6pt
+]
+
+\tikzstyle{en}=[%
+      rectangle, draw=black, thick, fill=none,
+      text ragged, minimum height=2em, minimum width=2em, inner sep=6pt
+]
+
+\tikzstyle{sh}=[%
+      rectangle, draw=gray, thick, fill=none, color = gray,
+      text ragged, minimum height=2em, minimum width=2em, inner sep=6pt
+]
+
+\lstset{
+	language = java,
+	basicstyle = \ttfamily,
+	stringstyle = \ttfamily,
+	keywordstyle=\color{Blue}\bfseries,
+	identifierstyle=\color{Pink},
+	commentstyle=\color{OliveGreen},
+	frameround=tttt,
+	showstringspaces=false,
+	captionpos=b
+}
+
+\lstdefinestyle{javacode}{
+	language = Java,
+	basicstyle = \normal\ttfamily,
+	stringstyle = \ttfamily,
+	keywordstyle=\color{Blue}\bfseries,
+	identifierstyle=\color{Pink},
+	commentstyle=\color{darkgreen},
+	frame=single,
+	frameround=tttt,
+	showstringspaces=false
+}
+
+\lstdefinestyle{camlcode}{
+	language = Caml,
+	basicstyle = \ttfamily,
+	stringstyle = \color{red}\ttfamily,
+	keywordstyle=\color{Blue}\bfseries,
+	identifierstyle=\ttfamily,
+	frameround=tttt,
+	numbers=none,
+	showstringspaces=false,
+	escapeinside={(*@}{@*)}
+}
+
+\lstdefinestyle{outputcode}{
+	language = bash,
+	backgroundcolor = \color{black},
+	basicstyle = \tiny\ttfamily\color{white},
+	stringstyle = \color{red}\ttfamily,
+	keywordstyle=\color{white}\bfseries,
+	identifierstyle=\ttfamily,
+	frameround=tttt,
+	numbers=none,
+	showstringspaces=false,
+	escapeinside={(*@}{@*)}
+}
+
+
+\author{Sujit Kumar Chakrabarti}
+\title{Case Study -- Timetable Generation}
+
+\begin{document}
+
+
+
+\maketitle
+
+The course coordinators of all programmes prepare the academic timetable for each semester based on the registration details of all courses. The generated timetable is valid only if it doesn't have any schedule conflicts. A conflict arises when two interfering courses occupy the same or overlapping slot. Two courses are said to interfere if they have at least one common participant.
+
+At the top level, the application context looks like this:
+
+\begin{center}
+\begin{tikzpicture}
+\node[align=center](rd){Registration \\Data};
+\node[rectangle, draw, right=of rd](sch){Scheduler};
+\node[align=center, right=of sch](tt){Timetable};
+
+\draw[->, thick, OliveGreen](rd) -- (sch);
+\draw[->, thick, OliveGreen](sch) -- (tt);
+\end{tikzpicture}
+\end{center}
+
+\section*{Input and Output Data}
+To get started, we may want to define the structures for the input and output data.
+
+\begin{itemize}
+\item \textbf{Course list:} Represented by a list of course code
+\item \textbf{Participant list:} Represented by a list of roll number/employee ID
+\item \textbf{Registration Data:} Participant $\longrightarrow$ Course list
+\end{itemize}
+
+\section*{Timetable Scheduling and Graph Colouring}
+\subsection*{Graph Colouring Problem}
+The problem of assigning a colour to each node in the graph such that no two neighbours get the same colour.
+
+\subsection*{Interference Graph}
+Each course is represented by a node. If two courses interfere with each other (i.e. have at least one common participant), draw an edge between them. Now, if each available slot is presented by a colour, then generating a valid time-table is nothing but $k$-colouring the graph, where $k$ is the number of available slots.
+
+\subsection*{Hardness of Graph Colouring}
+Graph colouring is an NP-complete problem. So, we have to go with a heuristic.
+
+\subsection*{Heuristics}
+\begin{enumerate}
+\item Chaitin
+\item Genetic algorithms
+\item Ant colony
+\item ML
+\end{enumerate}
+\section*{Architecture}
+\begin{center}
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}
+\node[align=center](rd){Registration \\Data};
+\node[rectangle, draw, right=of rd](pp){Preprocessor};
+\node[align=center, right=of pp](ig){Inference \\ Graph};
+\node[rectangle, draw, align=center, right=of ig](gc){Graph \\ Colouring};
+\node[align=center, right=of gc](cg){Coloured \\ Graph};
+\node[rectangle, draw, right=of cg](conv){Converter};
+\node[align=center, right=of conv](tt){Timetable};
+
+\draw[->, thick, OliveGreen](rd) -- (pp);
+\draw[->, thick, OliveGreen](pp) -- (ig);
+\draw[->, thick, OliveGreen](ig) -- (gc);
+\draw[->, thick, OliveGreen](gc) -- (cg);
+\draw[->, thick, OliveGreen](cg) -- (conv);
+\draw[->, thick, OliveGreen](conv) -- (tt);
+
+\end{tikzpicture}
+}
+\end{center}
+
+In the beginning, interference graph can be implemented as an edge list, where each edge is a pair (2-tuple) of nodes.
+
+Coloured graph can be a list of pairs: $(node \times colour) list$
+
+\section*{Development Approach}
+\begin{itemize}
+\item Teams of 2.
+\item Develop the initial set of test cases together
+\item APIs (if any) for data-structures
+\item Split as follows:
+	\begin{itemize}
+	\item Preprocessor
+	\item Graph colouring
+	\item Integrate and test
+	\item Optimise (faster implementation of data structures)
+	\end{itemize}
+\end{itemize}
+\end{document}
