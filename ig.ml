@@ -10,6 +10,7 @@ let get k d =
 let convert d =
   let g = G.make_graph () in
   let keys = D.keyset d in
+  let g2 = G.add_nodes keys g in
   let rec loop1 i g =
     if i = List.length keys - 1 then g
     else
@@ -24,12 +25,12 @@ let convert d =
           let setij = IntSet.inter seti setj in
           let g' =
             if IntSet.is_empty setij then g
-            else g |> (G.add_node ki) |> G.add_node kj |> (G.add_edge ki kj)
+            else (G.add_edge ki kj g)
           in
           loop2 (j + 1) g'
       in
       loop2 (i + 1) g
   in
-  loop1 0 g
+  loop1 0 g2
 
 

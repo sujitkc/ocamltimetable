@@ -25,15 +25,21 @@ let not_keys d =
 (* add a new node n to graph g (if it already doesn't exist). *)
 let add_node n = D.add_values n []
 
+let add_nodes ns g =
+  List.fold_left (fun g' n -> add_node n g') g ns
+
 let of_list l =
   let g = D.of_list l in
   let nks = not_keys g in
+  add_nodes nks g
+  (*
   let rec iter g = function
       [] -> g
     | nk' :: nks' ->
         let g' = (add_node nk' g) in (iter g' nks')
   in
   iter g nks
+  *)
 
 let has_node n g = List.mem n (D.keyset g)
 

@@ -6,6 +6,8 @@ val not_keys : (int * int list) list -> int list
 
 val add_node : 'a -> ('a * 'b list) list -> ('a * 'b list) list
 
+val add_nodes : 'a list -> ('a * 'b list) list -> ('a * 'b list) list
+
 val of_list : (int * int list) list -> (int * int list) list
 
 val num_of_nodes : ('a * 'b) list -> int
