@@ -10,7 +10,11 @@ let t1 () =
   let cmap = T.generate reg in
   print_endline (A.to_string cmap)
 
+let t2 () =
+  let cmap = T.main "data/ex1.csv" in
+  print_endline (A.to_string cmap)
+
 let t () =
-  t1 ()
+        t1 (); t2 ()
 
 let _ = t ()

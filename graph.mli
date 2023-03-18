@@ -20,6 +20,8 @@ val string_of_graph : (int * int list) list -> string
 
 val all_neighbours : int -> (int * int list) list -> int list
 
+val num_of_neighbours : int -> (int * int list) list -> int
+
 val are_neighbours : int -> int -> (int * int list) list -> bool
 
 val add_edge : int -> int -> (int * int list) list -> (int * int list) list

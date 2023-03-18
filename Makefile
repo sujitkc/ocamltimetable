@@ -1,4 +1,5 @@
 COMPILE=ocamlc -g
+CSV=/home/sujitkc/.opam/default/lib/csv
 
 dict.cmi : dict.mli
 	${COMPILE} -c dict.mli
@@ -48,17 +49,29 @@ test_ig.cmo : test_ig.ml ig.cmi
 test_ig : test_ig.cmo ig.cmo graph.cmo dict.cmo
 	ocamlc -g -o test_ig dict.cmo graph.cmo ig.cmo test_ig.cmo
 
-timetable.cmi : timetable.mli
+timetable.cmi : timetable.mli IO.cmi
 	${COMPILE} -c timetable.mli
 
-timetable.cmo : timetable.ml timetable.cmi dict.cmi graph.cmi gc.cmi ig.cmi
+timetable.cmo : timetable.ml timetable.cmi dict.cmi graph.cmi gc.cmi ig.cmi IO.cmi
 	${COMPILE} -c timetable.ml
 
 test_timetable.cmo : test_timetable.ml timetable.cmi dict.cmi graph.cmi gc.cmi ig.cmi
 	${COMPILE} -c test_timetable.ml
 
-test_timetable : test_timetable.cmo timetable.cmo dict.cmo graph.cmo gc.cmo ig.cmo
-	${COMPILE} -o test_timetable dict.cmo graph.cmo gc.cmo ig.cmo timetable.cmo test_timetable.cmo
+test_timetable : test_timetable.cmo timetable.cmo dict.cmo graph.cmo gc.cmo ig.cmo IO.cmo
+	${COMPILE} -o test_timetable ${CSV}/csv.cma dict.cmo graph.cmo gc.cmo ig.cmo IO.cmo timetable.cmo test_timetable.cmo
+
+IO.cmi : IO.mli dict.cmi
+	${COMPILE} -c IO.mli
+
+IO.cmo : IO.ml IO.cmi dict.cmi
+	${COMPILE} -c IO.ml -I ${CSV}
+
+test_IO.cmo : test_IO.ml IO.cmo dict.cmi
+	${COMPILE} -c test_IO.ml -I ${CSV}
+
+test_IO : test_IO.cmo IO.cmo dict.cmo
+	${COMPILE} -o test_IO ${CSV}/csv.cma dict.cmo IO.cmo test_IO.cmo
 
 clean:
 	rm *.cmo *.cmi test_dict

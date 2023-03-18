@@ -71,8 +71,8 @@ let remove_next k g =
   let nodes = G.all_nodes g in
   let sorted = List.sort 
     (fun n1 n2 ->
-       let num1 = G.num_of_neighbours n1
-       and num2 = G.num_of_neighbours n2 in
+       let num1 = G.num_of_neighbours n1 g
+       and num2 = G.num_of_neighbours n2 g in
        Int.compare num1 num2
      ) nodes in
   let next_node = List.nth sorted 0 in
