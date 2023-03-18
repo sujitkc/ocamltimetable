@@ -11,7 +11,7 @@ let t1 () =
   print_endline (A.to_string cmap)
 
 let t2 () =
-  let cmap = T.main "data/ex1.csv" in
+  let cmap = T.main "../data/ex1.csv" in
   print_endline (A.to_string cmap)
 
 let t () =
